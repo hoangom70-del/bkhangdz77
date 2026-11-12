@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>🎀 BAONAM IOS — ULTRA VIP PRO ENGINE</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Quicksand:wght@500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+:root{
+  --pink:#ff3d9a;--pink-2:#ff7ac0;--cyan:#00e0ff;--cyan-2:#4be2ff;
+  --purple:#a855f7;--green:#10f2a3;--red:#ff4d6d;--gold:#ffd700;
+  --bg-0:#07010f;--bg-1:#12041f;--bg-2:#1c0731;
+  --text:#fff;--text-dim:#b19cc9;
+}
+html,body{height:100%;overflow:hidden}
+body{font-family:'Quicksand',sans-serif;background:var(--bg-0);color:var(--text);position:relative;
+  user-select:none;-webkit-user-select:none}
+
+.game-frame{position:fixed;inset:0;width:100%;height:100%;border:none;z-index:1;background:#07010f}
+
+.bg{position:fixed;inset:0;z-index:0;overflow:hidden;
+  background:radial-gradient(ellipse at 50% 0%,#2a0a4a 0%,transparent 60%),
+             linear-gradient(180deg,var(--bg-0),var(--bg-1) 40%,var(--bg-2))}
+.grid-overlay{position:absolute;inset:0;
+  background-image:linear-gradient(rgba(255,61,154,.035) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(0,224,255,.035) 1px,transparent 1px);
+  background-size:36px 36px;
+  -webkit-mask-image:radial-gradient(ellipse at 50% 50%,#000 30%,transparent 75%);
+  mask-image:radial-gradient(ellipse at 50% 50%,#000 30%,transparent 75%)}
+.orb{position:absolute;border-radius:50%;filter:blur(70px);opacity:.55;will-change:transform;
+  animation:float 18s ease-in-out infinite}
+.orb-pink{width:380px;height:380px;top:-100px;left:-80px;background:radial-gradient(circle,#ff3d9a,#c02a75)}
+.orb-cyan{width:340px;height:340px;bottom:-100px;right:-80px;background:radial-gradient(circle,#00e0ff,#0082a8);animation-delay:-6s}
+.orb-purple{width:280px;height:280px;top:38%;left:50%;transform:translate(-50%,-50%);
+  background:radial-gradient(circle,#a855f7,#5c1f9e);opacity:.4;animation-delay:-12s}
+@keyframes float{0%,100%{transform:translate(0,0) scale(1)}33%{transform:translate(40px,-30px) scale(1.08)}66%{transform:translate(-30px,35px) scale(.94)}}
+
+.topbar{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;gap:10px;
+  padding:10px 14px;background:rgba(12,3,24,.72);
+  backdrop-filter:blur(18px) saturate(180%);-webkit-backdrop-filter:blur(18px) saturate(180%);
+  border-bottom:1px solid rgba(255,215,0,.18);box-shadow:0 4px 24px rgba(0,0,0,.4)}
+.brand{display:flex;align-items:center;gap:6px;font-family:'Baloo 2',sans-serif;
+  font-weight:800;font-size:16px;letter-spacing:1px;
+  background:linear-gradient(135deg,#ffd700,#ff3d9a,#a855f7);
+  -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
+  padding:4px 0;filter:drop-shadow(0 0 8px rgba(255,215,0,.4))}
+.brand-icon{font-size:18px;filter:none;-webkit-text-fill-color:initial}
+.brand-text{white-space:nowrap}
+
+.stats-global{flex:1;display:flex;justify-content:center;gap:8px}
+.stat{display:flex;align-items:center;gap:5px;padding:5px 11px;border-radius:99px;
+  font-family:'Baloo 2',sans-serif;font-weight:800;font-size:12.5px;letter-spacing:.3px;
+  transition:transform .25s cubic-bezier(.4,1.4,.5,1)}
+.stat i{font-size:11px}
+.stat-win{background:rgba(16,242,163,.12);color:var(--green);border:1px solid rgba(16,242,163,.35)}
+.stat-lose{background:rgba(255,77,109,.12);color:var(--red);border:1px solid rgba(255,77,109,.35)}
+.stat-rate{background:rgba(0,224,255,.12);color:var(--cyan);border:1px solid rgba(0,224,255,.35)}
+.stat.bump{transform:scale(1.15)}
+
+.icon-btn{width:36px;height:36px;border-radius:12px;border:1px solid rgba(255,215,0,.4);
+  background:linear-gradient(135deg,rgba(255,215,0,.18),rgba(168,85,247,.18));
+  color:#fff;font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center;
+  transition:transform .2s,box-shadow .2s,background .2s}
+.icon-btn:hover{transform:translateY(-1px);box-shadow:0 6px 20px rgba(255,215,0,.45)}
+.icon-btn:active{transform:scale(.94)}
+
+.card-wrap{position:fixed;z-index:50;touch-action:none;cursor:grab}
+.card-wrap.dragging{cursor:grabbing}
+
+.predict-card{position:relative;width:280px;padding:14px;border-radius:22px;
+  background:linear-gradient(165deg,rgba(28,7,49,.95),rgba(20,4,40,.95));
+  border:1.5px solid rgba(255,215,0,.4);
+  box-shadow:0 10px 35px rgba(0,0,0,.6),0 0 0 1px rgba(255,255,255,.04) inset,0 1px 0 rgba(255,255,255,.08) inset;
+  backdrop-filter:blur(20px) saturate(180%);-webkit-backdrop-filter:blur(20px) saturate(180%);
+  overflow:hidden;
+  transition:transform .4s cubic-bezier(.4,1.2,.5,1),box-shadow .25s,border-color .25s}
+
+.predict-card::before{content:'';position:absolute;top:-60%;left:-60%;width:220%;height:220%;
+  background:conic-gradient(from 0deg,transparent 0deg,transparent 300deg,rgba(255,215,0,.15) 330deg,rgba(255,38,154,.4) 360deg);
+  animation:spin 8s linear infinite;pointer-events:none;z-index:0}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+.card-glow{position:absolute;width:120px;height:120px;border-radius:50%;filter:blur(50px);pointer-events:none;z-index:0;top:-40px;right:-40px;background:var(--gold);opacity:.35}
+.card-head,.card-body{position:relative;z-index:1}
+
+.card-head{display:flex;align-items:center;gap:6px;margin-bottom:10px}
+.card-tag{display:flex;align-items:center;gap:5px;padding:3px 9px;border-radius:99px;
+  background:rgba(255,215,0,.18);border:1px solid rgba(255,215,0,.5)}
+.tag-dot{width:6px;height:6px;border-radius:50%;background:var(--gold);box-shadow:0 0 8px var(--gold);
+  animation:dotPulse 1.6s ease-in-out infinite}
+@keyframes dotPulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(.7)}}
+.tag-name{font-family:'Baloo 2',sans-serif;font-weight:800;font-size:10px;letter-spacing:1px;color:var(--gold)}
+
+.card-actions{margin-left:auto;display:flex;align-items:center;gap:3px}
+
+.action-btn{width:22px;height:22px;border-radius:6px;border:1px solid rgba(255,255,255,.15);
+  background:rgba(255,255,255,.05);color:var(--text-dim);font-size:9.5px;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;transition:transform .2s,background .2s,color .2s}
+.action-btn:hover{background:rgba(255,215,0,.25);color:#fff;transform:scale(1.08)}
+.action-btn:active{transform:scale(.9)}
+
+.toggle-btn i{transition:transform .3s}
+.predict-card.collapsed .toggle-btn i{transform:rotate(180deg)}
+
+.card-body{max-height:520px;opacity:1;overflow:hidden;
+  transition:max-height .35s cubic-bezier(.4,1,.3,1),opacity .25s,margin .3s}
+.predict-card.collapsed{padding-bottom:14px}
+.predict-card.collapsed .card-body{max-height:0;opacity:0;margin:0}
+
+.input-group{margin-bottom:8px}
+.input-label{font-size:9.5px;color:var(--gold);font-weight:700;margin-bottom:2px;letter-spacing:.5px;display:block}
+.md5-input-box{width:100%;background:rgba(255,255,255,.05);border:1px solid rgba(255,215,0,.3);
+  border-radius:9px;padding:7px 10px;color:#fff;font-family:'Quicksand',sans-serif;
+  font-size:11.5px;outline:none;transition:border-color .2s}
+.md5-input-box:focus{border-color:var(--gold);box-shadow:0 0 10px rgba(255,215,0,.4)}
+
+.check-btn{width:100%;padding:9px;border-radius:10px;border:none;
+  background:linear-gradient(135deg,#ffd700,#ff3d9a,#a855f7);color:#fff;
+  font-family:'Baloo 2',sans-serif;font-weight:800;font-size:13px;letter-spacing:1px;
+  cursor:pointer;margin-top:4px;margin-bottom:8px;box-shadow:0 4px 18px rgba(255,215,0,.35);
+  transition:transform .2s,box-shadow .2s}
+.check-btn:hover{transform:translateY(-1px);box-shadow:0 6px 22px rgba(255,215,0,.55)}
+.check-btn:active{transform:scale(.96)}
+
+.analysis-box{background:rgba(0,0,0,.25);border:1px solid rgba(255,255,255,.06);border-radius:10px;padding:6px 10px;margin-bottom:8px}
+.trend-info{font-size:10px;color:var(--cyan);font-weight:700;margin-bottom:3px;display:flex;justify-content:space-between}
+.conf-text{font-size:9.5px;color:var(--gold);font-weight:700}
+.conf-bar-bg{width:100%;height:4px;background:rgba(255,255,255,.08);border-radius:99px;overflow:hidden}
+.conf-bar-fill{height:100%;width:0%;background:linear-gradient(90deg,var(--cyan),var(--pink),var(--gold));transition:width .6s ease;border-radius:99px}
+
+.result-row{display:flex;justify-content:center;gap:10px;margin-bottom:8px}
+.res-circle{position:relative;width:86px;height:86px;border-radius:50%;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;
+  border:2px solid rgba(255,255,255,.1);background:rgba(255,255,255,.03);
+  transition:transform .3s,box-shadow .3s,border-color .3s,background .3s}
+.res-label{font-family:'Baloo 2',sans-serif;font-weight:800;font-size:10.5px;letter-spacing:2px;opacity:.6}
+.res-value{font-family:'Baloo 2',sans-serif;font-weight:800;font-size:15px;letter-spacing:.5px}
+.res-circle.tai{color:#ff8fc0}
+.res-circle.xiu{color:#7fdcff}
+.res-circle.tai.active{color:#fff;background:linear-gradient(135deg,#ff3d9a,#c02a75);border-color:#ff8fc0;
+  box-shadow:0 0 24px rgba(255,61,154,.7),0 0 0 3px rgba(255,61,154,.2);animation:pulseP .9s ease-in-out infinite}
+.res-circle.xiu.active{color:#fff;background:linear-gradient(135deg,#00e0ff,#0082a8);border-color:#4be2ff;
+  box-shadow:0 0 24px rgba(0,224,255,.7),0 0 0 3px rgba(0,224,255,.2);animation:pulseC .9s ease-in-out infinite}
+@keyframes pulseP{0%,100%{transform:scale(1)}50%{transform:scale(1.06)}}
+@keyframes pulseC{0%,100%{transform:scale(1)}50%{transform:scale(1.06)}}
+
+.status-row{display:flex;align-items:center;justify-content:center;gap:6px;
+  font-size:10px;color:var(--text-dim);font-weight:600;letter-spacing:.4px}
+.status-dot{width:6px;height:6px;border-radius:50%;background:var(--text-dim)}
+
+.toast{position:fixed;bottom:24px;left:50%;transform:translate(-50%,120%);
+  padding:10px 20px;border-radius:14px;background:rgba(20,5,35,.95);
+  border:1px solid rgba(255,215,0,.5);color:#fff;font-weight:700;font-size:12.5px;letter-spacing:.3px;
+  box-shadow:0 8px 32px rgba(255,215,0,.35);
+  backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
+  z-index:9999;opacity:0;pointer-events:none;
+  transition:transform .35s cubic-bezier(.4,1.4,.5,1),opacity .3s;
+  display:flex;align-items:center;gap:8px;max-width:90vw}
+.toast.show{transform:translate(-50%,0);opacity:1}
+</style>
+</head>
+<body>
+
+<div class="bg">
+  <div class="orb orb-pink"></div>
+  <div class="orb orb-cyan"></div>
+  <div class="orb orb-purple"></div>
+  <div class="grid-overlay"></div>
+</div>
+
+<iframe id="gameFrame" class="game-frame" src="https://lc79b.bet/" allow="fullscreen; autoplay"></iframe>
+
+<header class="topbar">
+  <div class="brand">
+    <span class="brand-icon">👑</span>
+    <span class="brand-text">BAONAM ULTRA VIP</span>
+  </div>
+  <div class="stats-global">
+    <div class="stat stat-win" id="stat-win"><i class="fa-solid fa-circle-check"></i><span id="g-win">0</span></div>
+    <div class="stat stat-lose" id="stat-lose"><i class="fa-solid fa-circle-xmark"></i><span id="g-lose">0</span></div>
+    <div class="stat stat-rate"><i class="fa-solid fa-chart-line"></i><span id="g-rate">--%</span></div>
+  </div>
+  <button class="icon-btn" id="btnReload" title="Tải lại game">
+    <i class="fa-solid fa-rotate-right"></i>
+  </button>
+</header>
+
+<div class="card-wrap" id="wrap-md5" style="top:96px;left:16px">
+  <div class="predict-card" id="card-md5">
+    <div class="card-glow"></div>
+    <div class="card-head">
+      <div class="card-tag"><span class="tag-dot"></span><span class="tag-name">ULTRA TREND v9.0</span></div>
+      
+      <div class="card-actions">
+        <button class="action-btn" id="btnRotateLeft" title="Xoay trái 90°"><i class="fa-solid fa-rotate-left"></i></button>
+        <button class="action-btn" id="btnRotateRight" title="Xoay phải 90°"><i class="fa-solid fa-rotate-right"></i></button>
+        <button class="action-btn" id="btnFlip" title="Lật ngược 180°"><i class="fa-solid fa-arrows-rotate"></i></button>
+        <button class="action-btn" id="btnResetRotate" title="Về hướng mặc định"><i class="fa-solid fa-house"></i></button>
+        <button class="action-btn toggle-btn" data-card="card-md5" title="Thu gọn"><i class="fa-solid fa-chevron-up"></i></button>
+      </div>
+    </div>
+
+    <div class="card-body">
+      <div class="analysis-box">
+        <div class="trend-info">
+          <span id="trendName">Cầu: Chờ xác thực Key</span>
+          <span class="conf-text" id="confText">--%</span>
+        </div>
+        <div class="conf-bar-bg">
+          <div class="conf-bar-fill" id="confFill"></div>
+        </div>
+      </div>
+
+      <div class="result-row">
+        <div class="res-circle tai" id="tai-md5"><span class="res-label">TÀI</span><span class="res-value">--%</span></div>
+        <div class="res-circle xiu" id="xiu-md5"><span class="res-label">XỈU</span><span class="res-value">--%</span></div>
+      </div>
+      <div class="status-row" id="strow-md5">
+        <span class="status-dot" id="status-dot-md5"></span><span class="status-text" id="status-md5">Sẵn sàng nhận diện cầu...</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+let toastTimer = null;
+function showToast(msg, type) {
+  const el = document.getElementById('toast');
+  if (!el) return;
+  el.innerHTML = msg;
+  el.className = 'toast show' + (type ? ' ' + type : '');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => { el.classList.remove('show'); }, 2600);
+}
+
+let currentDegree = 0;
+const cardEl = document.getElementById('card-md5');
+
+function applyRotation(deg) {
+  currentDegree = deg;
+  if (cardEl) cardEl.style.transform = `rotate(${currentDegree}deg)`;
+}
+
+document.getElementById('btnRotateLeft').addEventListener('click', (e) => { e.stopPropagation(); applyRotation(currentDegree - 90); });
+document.getElementById('btnRotateRight').addEventListener('click', (e) => { e.stopPropagation(); applyRotation(currentDegree + 90); });
+document.getElementById('btnFlip').addEventListener('click', (e) => { e.stopPropagation(); applyRotation(currentDegree + 180); });
+document.getElementById('btnResetRotate').addEventListener('click', (e) => { e.stopPropagation(); applyRotation(0); });
+
+/* ============================================================
+   KẾT NỐI API LC79 MD5
+   ============================================================ */
+const API = 'http://180.93.102.202:3000/lc79md5';
+const PROXIES = [
+  'https://corsproxy.io/?',
+  'https://cors-anywhere.herokuapp.com/',
+  'https://cors.isomorphic-git.org/',
+  'https://corsproxy.org/?'
+];
+
+async function fetchWithTimeout(url, ms = 5000) {
+  const ctrl = new AbortController();
+  const id = setTimeout(() => ctrl.abort(), ms);
+  try {
+    const res = await fetch(url, { cache: 'no-store', signal: ctrl.signal });
+    clearTimeout(id);
+    if (!res.ok) throw new Error(res.status);
+    return await res.json();
+  } catch (e) {
+    clearTimeout(id);
+    throw e;
+  }
+}
+
+async function loadApiData() {
+  const taiEl = document.getElementById('tai-md5');
+  const xiuEl = document.getElementById('xiu-md5');
+  const statusEl = document.getElementById('status-md5');
+  const dotEl = document.getElementById('status-dot-md5');
+  const trendNameEl = document.getElementById('trendName');
+  const confTextEl = document.getElementById('confText');
+  const confFillEl = document.getElementById('confFill');
+
+  statusEl.textContent = 'Đang kết nối API...';
+  dotEl.style.background = 'var(--gold)';
+  trendNameEl.textContent = 'Cầu: Đang tải...';
+
+  // Thử Netlify Function trước
+  try {
+    const r = await fetch('/.netlify/functions/proxy?path=/lc79md5', { signal: AbortSignal.timeout(5000) });
+    if (r.ok) {
+      const data = await r.json();
+      applyApiData(data);
+      return;
+    }
+  } catch (e) {}
+
+  // Fallback proxy
+  const urls = PROXIES.map(p => p + encodeURIComponent(API));
+  try {
+    const data = await Promise.any(urls.slice(0, 2).map(u => fetchWithTimeout(u)));
+    applyApiData(data);
+  } catch (err) {
+    statusEl.textContent = 'Lỗi kết nối API';
+    dotEl.style.background = 'var(--red)';
+    trendNameEl.textContent = 'Cầu: Không kết nối được';
+    confTextEl.textContent = '--%';
+    confFillEl.style.width = '0%';
+    taiEl.querySelector('.res-value').textContent = '--%';
+    xiuEl.querySelector('.res-value').textContent = '--%';
+  }
+}
+
+function applyApiData(data) {
+  const taiEl = document.getElementById('tai-md5');
+  const xiuEl = document.getElementById('xiu-md5');
+  const statusEl = document.getElementById('status-md5');
+  const dotEl = document.getElementById('status-dot-md5');
+  const trendNameEl = document.getElementById('trendName');
+  const confTextEl = document.getElementById('confText');
+  const confFillEl = document.getElementById('confFill');
+
+  taiEl.classList.remove('active');
+  xiuEl.classList.remove('active');
+
+  const duDoan = data.du_doan || data.ket_qua || '--';
+  const doTinCay = data.do_tin_cay || '0%';
+  const percent = parseFloat(doTinCay) || 0;
+
+  const isTai = duDoan === 'Tài';
+  const taiPercent = isTai ? percent : (100 - percent);
+  const xiuPercent = 100 - taiPercent;
+
+  taiEl.querySelector('.res-value').textContent = Math.round(taiPercent) + '%';
+  xiuEl.querySelector('.res-value').textContent = Math.round(xiuPercent) + '%';
+
+  if (isTai) {
+    taiEl.classList.add('active');
+  } else if (duDoan === 'Xỉu') {
+    xiuEl.classList.add('active');
+  }
+
+  const phien = data.phien_nay || data.phien_truoc || '--';
+  trendNameEl.textContent = `Cầu: Phiên #${phien}`;
+  confTextEl.textContent = doTinCay;
+  confFillEl.style.width = percent + '%';
+
+  statusEl.textContent = `🎲 ${duDoan} • ${doTinCay}`;
+  dotEl.style.background = 'var(--green)';
+
+  // Cập nhật thống kê nếu có
+  if (data.thong_ke) {
+    const tk = data.thong_ke;
+    const winEl = document.getElementById('g-win');
+    const loseEl = document.getElementById('g-lose');
+    const rateEl = document.getElementById('g-rate');
+    if (winEl) winEl.textContent = tk.thang || 0;
+    if (loseEl) loseEl.textContent = tk.thua || 0;
+    if (rateEl) rateEl.textContent = tk.ti_le_thang || '--%';
+  }
+
+  showToast(`👑 ${duDoan} ${doTinCay}`, 'win');
+}
+
+// Tự động load khi mở trang
+setTimeout(loadApiData, 500);
+setInterval(loadApiData, 7000);
+
+document.querySelectorAll('.toggle-btn').forEach(btn => {
+  btn.addEventListener('click', e => {
+    e.stopPropagation();
+    const card = document.getElementById(btn.dataset.card);
+    if (!card) return;
+    card.classList.toggle('collapsed');
+  });
+});
+
+function makeDraggable(el) {
+  let drag = false, sx = 0, sy = 0, ix = 0, iy = 0, moveScheduled = false;
+  let nx = 0, ny = 0;
+
+  el.addEventListener('pointerdown', e => {
+    if (e.target.closest('.action-btn') || e.target.closest('input') || e.target.closest('button')) return;
+    drag = true;
+    el.classList.add('dragging');
+    sx = e.clientX; sy = e.clientY;
+    const rect = el.getBoundingClientRect();
+    ix = rect.left; iy = rect.top;
+    try { el.setPointerCapture(e.pointerId); } catch(_){}
+  });
+
+  el.addEventListener('pointermove', e => {
+    if (!drag) return;
+    nx = ix + (e.clientX - sx);
+    ny = iy + (e.clientY - sy);
+    if (!moveScheduled) {
+      moveScheduled = true;
+      requestAnimationFrame(() => {
+        el.style.left = nx + 'px';
+        el.style.top = ny + 'px';
+        moveScheduled = false;
+      });
+    }
+  });
+
+  const stop = () => { drag = false; el.classList.remove('dragging'); };
+  el.addEventListener('pointerup', stop);
+  el.addEventListener('pointercancel', stop);
+}
+document.querySelectorAll('.card-wrap').forEach(makeDraggable);
+
+const btnReload = document.getElementById('btnReload');
+if (btnReload) {
+  btnReload.addEventListener('click', () => {
+    const f = document.getElementById('gameFrame');
+    if (!f) return;
+    f.src = 'about:blank';
+    setTimeout(() => { f.src = 'https://lc79b.bet/'; }, 80);
+    showToast('🔄 Đang tải lại game...', '');
+  });
+}
+
+setTimeout(() => showToast('👑 Đã kích hoạt hệ thống phân tích tỉ lệ cầu linh hoạt!', ''), 600);
+</script>
+</body>
+</html>
